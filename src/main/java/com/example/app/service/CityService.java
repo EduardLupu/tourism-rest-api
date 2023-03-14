@@ -1,6 +1,7 @@
 package com.example.app.service;
 
 import com.example.app.model.City;
+import com.example.app.model.Country;
 import com.example.app.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,13 @@ public class CityService {
     public City updateCity(Long id, City city) {
         if (cityRepository.existsById(id)) {
             City cityToBeUpdated = getCityById(id);
+            Country countryToBeUpdated = cityToBeUpdated.getCountry();
+            countryToBeUpdated.removeCity(cityToBeUpdated);
             cityToBeUpdated.setCityName(city.getCityName());
             cityToBeUpdated.setCitySurface(city.getCitySurface());
             cityToBeUpdated.setCityPopulation(city.getCityPopulation());
-            cityToBeUpdated.setCountry(city.getCountry());
             cityToBeUpdated.setCityPostalCode(city.getCityPostalCode());
+            countryToBeUpdated.addCity(cityToBeUpdated);
             return cityRepository.save(cityToBeUpdated);
         }
         return null;

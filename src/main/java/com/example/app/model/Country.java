@@ -1,7 +1,5 @@
 package com.example.app.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -89,7 +87,9 @@ public class Country {
 
     public void setCities(List<City> cities) {
         this.cities.clear();
-        this.cities.addAll(cities);
+        for (City city: cities) {
+            addCity(city);
+        }
     }
 
     @Override
