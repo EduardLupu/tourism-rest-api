@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CountryService {
@@ -17,6 +18,13 @@ public class CountryService {
 
     @Autowired
     private CityRepository cityRepository;
+
+    public List<Country> getCountriesWithPopulationHigherThan(int population) {
+        return countryRepository.findAll()
+                .stream()
+                .filter(country -> country.getCountryPopulation() >= population)
+                .collect(Collectors.toList());
+    }
 
     public List<Country> getCountries() {
         return countryRepository.findAll();

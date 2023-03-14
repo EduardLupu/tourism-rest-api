@@ -1,10 +1,8 @@
 package com.example.app.controller;
 
-import com.example.app.exceptions.NotFoundException;
+
 import com.example.app.model.City;
 import com.example.app.model.Country;
-import com.example.app.repository.CountryRepository;
-import com.example.app.service.CityService;
 import com.example.app.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +17,14 @@ public class CountryController {
 
     @Autowired
     private CountryService countryService;
+
+    @GetMapping(value = "/countries", params = "population")
+    public ResponseEntity<List<Country>> getCountries(@RequestParam(required = false) int population) {
+        List <Country> countries = countryService.getCountriesWithPopulationHigherThan(population);
+        if (countries.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(countries, HttpStatus.OK);
+    }
 
     @GetMapping("/countries")
     public ResponseEntity<List<Country>> getCountries() {
