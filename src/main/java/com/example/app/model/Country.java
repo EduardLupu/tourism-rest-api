@@ -1,6 +1,5 @@
 package com.example.app.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -16,13 +15,23 @@ public class Country {
     private int countryPopulation;
     private String countryAbbreviation;
 
-    @JsonManagedReference
     @OneToMany(
             mappedBy = "country",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     private List<City> cities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "country")
+    private List<Visit> visits = new ArrayList<>();
+
+    public void setCountryId(Long countryId) {
+        this.countryId = countryId;
+    }
+
+    public List<Visit> getVisits() {
+        return visits;
+    }
 
     public void addCity(City city) {
         cities.add(city);
@@ -90,18 +99,5 @@ public class Country {
         for (City city: cities) {
             addCity(city);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Country country = (Country) o;
-        return countrySurface == country.countrySurface && countryPopulation == country.countryPopulation && countryId.equals(country.countryId) && countryName.equals(country.countryName) && countryAbbreviation.equals(country.countryAbbreviation);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(countryId, countryName, countrySurface, countryPopulation, countryAbbreviation);
     }
 }

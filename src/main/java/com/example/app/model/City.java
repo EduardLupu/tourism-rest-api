@@ -3,8 +3,6 @@ package com.example.app.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.Objects;
-
 @Entity
 public class City {
 
@@ -70,18 +68,5 @@ public class City {
 
     public void setCountry(Country country) {
         this.country = country;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        City city = (City) o;
-        return citySurface == city.citySurface && cityPopulation == city.cityPopulation && cityPostalCode == city.cityPostalCode && cityId.equals(city.cityId) && cityName.equals(city.cityName) && country.equals(city.country);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(cityId, cityName, citySurface, cityPopulation, cityPostalCode, country);
     }
 }
