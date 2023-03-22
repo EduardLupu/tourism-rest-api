@@ -3,7 +3,7 @@ package com.example.app.controller;
 
 import com.example.app.model.City;
 import com.example.app.model.Country;
-import com.example.app.model.CountryAvgDTO;
+import com.example.app.model.CountryStatisticsDTO;
 import com.example.app.model.CountryDTO;
 import com.example.app.service.CityService;
 import com.example.app.service.CountryService;
@@ -38,9 +38,9 @@ public class CountryController {
         return new ResponseEntity<>(hCountries, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/countries/avg")
-    public ResponseEntity<List<CountryAvgDTO>> getCountriesAverageMoneySpent() {
-        List <CountryAvgDTO> countries = countryService.getCountriesAverageMoneySpent();
+    @GetMapping(value = "/countries/stats")
+    public ResponseEntity<List<CountryStatisticsDTO>> getCountriesAverageMoneySpent() {
+        List <CountryStatisticsDTO> countries = countryService.getCountriesAverageDaysSpent();
         if (countries.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(countries, HttpStatus.OK);

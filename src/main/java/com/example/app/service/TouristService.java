@@ -1,5 +1,6 @@
 package com.example.app.service;
 
+import com.example.app.model.TouristStatisticsDTO;
 import com.example.app.model.Tourist;
 import com.example.app.repository.TouristRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,9 @@ public class TouristService {
             return true;
         }
         return false;
+    }
+
+    public List<TouristStatisticsDTO> getTouristsInDescOrderBasedOnTotalMoneySpent() {
+        return touristRepository.orderTouristsByTheTotalMoneySpentInVisits();
     }
 }

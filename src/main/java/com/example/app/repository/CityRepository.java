@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CityRepository extends JpaRepository<City, Long> {
 
+
 }

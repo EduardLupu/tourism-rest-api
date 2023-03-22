@@ -2,7 +2,7 @@ package com.example.app.service;
 
 import com.example.app.model.City;
 import com.example.app.model.Country;
-import com.example.app.model.CountryAvgDTO;
+import com.example.app.model.CountryStatisticsDTO;
 import com.example.app.repository.CityRepository;
 import com.example.app.repository.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +81,7 @@ public class CountryService {
         return false;
     }
 
-    public List<CountryAvgDTO> getCountriesAverageMoneySpent() {
-        return countryRepository.OrderCountriesByAverageMoneySpent();
+    public List<CountryStatisticsDTO> getCountriesAverageDaysSpent() {
+        return countryRepository.orderCountriesByAverageDaysSpent();
     }
 }

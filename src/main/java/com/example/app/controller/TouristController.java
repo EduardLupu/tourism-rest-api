@@ -1,5 +1,6 @@
 package com.example.app.controller;
 
+import com.example.app.model.TouristStatisticsDTO;
 import com.example.app.model.Tourist;
 import com.example.app.model.TouristDTO;
 import com.example.app.service.TouristService;
@@ -29,6 +30,14 @@ public class TouristController {
                         e.getAge()))
                 .toList();
 
+        if (tourists.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(tourists, HttpStatus.OK);
+    }
+
+    @GetMapping("/tourists/stats")
+    public ResponseEntity<List<TouristStatisticsDTO>> getTouristsStats() {
+        List <TouristStatisticsDTO> tourists = touristService.getTouristsInDescOrderBasedOnTotalMoneySpent();
         if (tourists.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(tourists, HttpStatus.OK);

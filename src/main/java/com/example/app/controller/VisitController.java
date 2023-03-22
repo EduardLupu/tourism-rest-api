@@ -1,9 +1,6 @@
 package com.example.app.controller;
 
-import com.example.app.model.Country;
-import com.example.app.model.Tourist;
-import com.example.app.model.Visit;
-import com.example.app.model.VisitDTO;
+import com.example.app.model.*;
 import com.example.app.service.CountryService;
 import com.example.app.service.TouristService;
 import com.example.app.service.VisitService;
@@ -36,11 +33,29 @@ public class VisitController {
     }
 
     @GetMapping("/visits/{id}")
-    public ResponseEntity<Visit> getVisitById(@PathVariable Long id) {
+    public ResponseEntity<VisitDTOwithDTOs> getVisitById(@PathVariable Long id) {
         Visit visit = visitService.getVisitById(id);
         if (visit == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(visit, HttpStatus.OK);
+        Tourist t = visit.getTourist();
+        Country c = visit.getCountry();
+        VisitDTOwithDTOs visitDTO = new VisitDTOwithDTOs(
+                visit.getId(),
+                new TouristDTO(t.getTouristId(),
+                        t.getTouristName(),
+                        t.getTouristDateOfBirth(),
+                        t.getTouristGender(),
+                        t.getAge()),
+                new CountryDTO(c.getCountryId(),
+                        c.getCountryName(),
+                        c.getCountrySurface(),
+                        c.getCountryPopulation(),
+                        c.getCountryAbbreviation()),
+                visit.getMoneySpent(),
+                visit.getDaysSpent()
+        );
+
+        return new ResponseEntity<>(visitDTO, HttpStatus.OK);
     }
 
     @PostMapping("/visits")
