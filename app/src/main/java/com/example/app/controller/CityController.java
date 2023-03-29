@@ -19,16 +19,11 @@ public class CityController {
 
     @GetMapping("/cities")
     public ResponseEntity<List<CityDTOCountryId>> getCities() {
-        List<City> cities = cityService.getCities();
-        List<CityDTOCountryId> hCities = new ArrayList<>();
-        for (City c: cities){
-            hCities.add(new CityDTOCountryId(c.getCityId(), c.getCityName(), c.getCitySurface(), c.getCityPopulation(), c.getCityPopulation(),
-                    (c.getCountry() == null) ? null : c.getCountry().getCountryId()));
-        }
-        if (hCities.isEmpty()) {
+        List<CityDTOCountryId> result = cityService.getCitiesDTOCountryId();
+        if (result.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(hCities, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/cities/{id}")
