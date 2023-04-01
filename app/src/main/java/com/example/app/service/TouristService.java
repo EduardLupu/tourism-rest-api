@@ -1,9 +1,8 @@
 package com.example.app.service;
 
-import com.example.app.model.TouristStatisticsDTO;
+import com.example.app.dto.TouristStatisticsDTO;
 import com.example.app.model.Tourist;
 import com.example.app.repository.TouristRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +10,11 @@ import java.util.List;
 @Service
 public class TouristService {
 
-    @Autowired
-    private TouristRepository touristRepository;
+    private final TouristRepository touristRepository;
+
+    public TouristService(TouristRepository touristRepository) {
+        this.touristRepository = touristRepository;
+    }
 
     public List<Tourist> getTourists() {
         return touristRepository.findAll();

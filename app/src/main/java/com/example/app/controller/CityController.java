@@ -1,21 +1,29 @@
 package com.example.app.controller;
 
-import com.example.app.model.*;
+import com.example.app.dto.CityDTOCountryDTO;
+import com.example.app.dto.CityDTOCountryId;
+import com.example.app.dto.CountryDTO;
+import com.example.app.model.City;
+import com.example.app.model.Country;
 import com.example.app.service.CityService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class CityController {
 
-    @Autowired
-    private CityService cityService;
+
+    private final CityService cityService;
+
+    public CityController(CityService cityService) {
+        this.cityService = cityService;
+    }
+
 
     @GetMapping("/cities")
     public ResponseEntity<List<CityDTOCountryId>> getCities() {
@@ -64,6 +72,7 @@ public class CityController {
         if (cityService.deleteCity(id)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

@@ -1,11 +1,11 @@
 package com.example.app.service;
 
+import com.example.app.dto.CountryDTO;
+import com.example.app.dto.CountryStatisticsDTO;
 import com.example.app.model.City;
 import com.example.app.model.Country;
-import com.example.app.model.CountryStatisticsDTO;
 import com.example.app.repository.CityRepository;
 import com.example.app.repository.CountryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,17 +14,19 @@ import java.util.stream.Collectors;
 @Service
 public class CountryService {
 
-    @Autowired
-    private CountryRepository countryRepository;
+    private final CountryRepository countryRepository;
 
-    @Autowired
-    private CityRepository cityRepository;
+    private final CityRepository cityRepository;
+
+    public CountryService(CountryRepository countryRepository, CityRepository cityRepository) {
+        this.countryRepository = countryRepository;
+        this.cityRepository = cityRepository;
+    }
 
     public void assignCitiesToCountry(Long id, List<Long> cities_id_list) {
         Country country = getCountryById(id);
-        for (Long city_id: cities_id_list) {
-            if (cityRepository.existsById(city_id))
-            {
+        for (Long city_id : cities_id_list) {
+            if (cityRepository.existsById(city_id)) {
                 City city = cityRepository.getReferenceById(city_id);
                 country.addCity(city);
                 cityRepository.save(city);
@@ -33,10 +35,16 @@ public class CountryService {
         countryRepository.save(country);
     }
 
-    public List<Country> getCountriesWithPopulationHigherThan(int population) {
+    public List<CountryDTO> getCountriesWithPopulationHigherThan(int population) {
         return countryRepository.findAll()
                 .stream()
                 .filter(country -> country.getCountryPopulation() >= population)
+                .map(country -> new CountryDTO(
+                        country.getCountryId(),
+                        country.getCountryName(),
+                        country.getCountryPopulation(),
+                        country.getCountrySurface(),
+                        country.getCountryAbbreviation()))
                 .collect(Collectors.toList());
     }
 

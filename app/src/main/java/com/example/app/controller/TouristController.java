@@ -1,10 +1,9 @@
 package com.example.app.controller;
 
-import com.example.app.model.TouristStatisticsDTO;
+import com.example.app.dto.TouristDTO;
+import com.example.app.dto.TouristStatisticsDTO;
 import com.example.app.model.Tourist;
-import com.example.app.model.TouristDTO;
 import com.example.app.service.TouristService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +12,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class TouristController {
 
+    private final TouristService touristService;
 
-    @Autowired
-    private TouristService touristService;
+    public TouristController(TouristService touristService) {
+        this.touristService = touristService;
+    }
+
 
     @GetMapping("/tourists")
     public ResponseEntity<List<TouristDTO>> getTourists() {
@@ -37,7 +40,7 @@ public class TouristController {
 
     @GetMapping("/tourists/stats")
     public ResponseEntity<List<TouristStatisticsDTO>> getTouristsStats() {
-        List <TouristStatisticsDTO> tourists = touristService.getTouristsInDescOrderBasedOnTotalMoneySpent();
+        List<TouristStatisticsDTO> tourists = touristService.getTouristsInDescOrderBasedOnTotalMoneySpent();
         if (tourists.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(tourists, HttpStatus.OK);

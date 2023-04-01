@@ -2,19 +2,21 @@ package com.example.app.controller;
 
 import com.example.app.model.Language;
 import com.example.app.service.LanguageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController("/api")
+@CrossOrigin
 public class LanguageController {
 
-    @Autowired
-    private LanguageService languageService;
+    private final LanguageService languageService;
+
+    public LanguageController(LanguageService languageService) {
+        this.languageService = languageService;
+    }
 
     @GetMapping("/languages")
     public ResponseEntity<List<Language>> getLanguages() {

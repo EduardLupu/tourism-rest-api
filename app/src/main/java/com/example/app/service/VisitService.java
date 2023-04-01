@@ -2,16 +2,18 @@ package com.example.app.service;
 
 import com.example.app.model.Visit;
 import com.example.app.repository.VisitRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class VisitService {
+  
+    private final VisitRepository visitRepository;
 
-    @Autowired
-    private VisitRepository visitRepository;
+    public VisitService(VisitRepository visitRepository) {
+        this.visitRepository = visitRepository;
+    }
 
     public List<Visit> getVisits() {
         return visitRepository.findAll();

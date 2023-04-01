@@ -1,14 +1,13 @@
 package com.example.app.controller;
 
 
+import com.example.app.dto.CountryDTO;
+import com.example.app.dto.CountryStatisticsDTO;
 import com.example.app.model.City;
 import com.example.app.model.Country;
-import com.example.app.model.CountryStatisticsDTO;
-import com.example.app.model.CountryDTO;
 import com.example.app.service.CityService;
 import com.example.app.service.CountryService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -22,25 +21,23 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class CountryController {
 
-    @Autowired
-    private CountryService countryService;
+    private final CountryService countryService;
 
-    @Autowired
-    private CityService cityService;
+    private final CityService cityService;
+
+    public CountryController(CountryService countryService, CityService cityService) {
+        this.countryService = countryService;
+        this.cityService = cityService;
+    }
 
     @GetMapping(value = "/countries", params = "population")
     public ResponseEntity<List<CountryDTO>> getCountries(@RequestParam(required = false) int population) {
-        List <Country> countries = countryService.getCountriesWithPopulationHigherThan(population);
-        List<CountryDTO> hCountries = new ArrayList<>();
-        for (Country c: countries)
-        {
-            hCountries.add(new CountryDTO(c.getCountryId(), c.getCountryName(), c.getCountrySurface(), c.getCountryPopulation(), c.getCountryAbbreviation()));
-        }
-        if (hCountries.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(hCountries, HttpStatus.OK);
+        List<CountryDTO> countries = countryService.getCountriesWithPopulationHigherThan(population);
+        if (countries.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(countries, HttpStatus.OK);
     }
 
     @PostMapping("/countries/{id}/cities")
@@ -51,22 +48,19 @@ public class CountryController {
 
     @GetMapping(value = "/countries/stats")
     public ResponseEntity<List<CountryStatisticsDTO>> getCountriesAverageMoneySpent() {
-        List <CountryStatisticsDTO> countries = countryService.getCountriesAverageDaysSpent();
-        if (countries.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        List<CountryStatisticsDTO> countries = countryService.getCountriesAverageDaysSpent();
+        if (countries.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(countries, HttpStatus.OK);
     }
 
     @GetMapping(value = "/countries")
     public ResponseEntity<List<CountryDTO>> getCountries() {
-        List <Country> countries = countryService.getCountries();
+        List<Country> countries = countryService.getCountries();
         List<CountryDTO> countriesDTO = new ArrayList<>();
-        for (Country c: countries)
-        {
+        for (Country c : countries) {
             countriesDTO.add(new CountryDTO(c.getCountryId(), c.getCountryName(), c.getCountrySurface(), c.getCountryPopulation(), c.getCountryAbbreviation()));
         }
-        if (countriesDTO.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (countriesDTO.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(countriesDTO, HttpStatus.OK);
     }
 

@@ -1,9 +1,7 @@
 package com.example.app.service;
 
 import com.example.app.model.Language;
-import com.example.app.model.Tourist;
 import com.example.app.repository.LanguageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +9,12 @@ import java.util.List;
 @Service
 public class LanguageService {
 
-    @Autowired
-    private LanguageRepository languageRepository;
+    private final LanguageRepository languageRepository;
+
+    public LanguageService(LanguageRepository languageRepository) {
+        this.languageRepository = languageRepository;
+    }
+
 
     public List<Language> getLanguages() {
         return languageRepository.findAll();

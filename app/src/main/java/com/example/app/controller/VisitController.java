@@ -1,32 +1,49 @@
 package com.example.app.controller;
 
-import com.example.app.model.*;
+import com.example.app.dto.CountryDTO;
+import com.example.app.dto.TouristDTO;
+import com.example.app.dto.VisitDTO;
+import com.example.app.dto.VisitDTOwithDTOs;
+import com.example.app.model.Country;
+import com.example.app.model.Tourist;
+import com.example.app.model.Visit;
 import com.example.app.service.CountryService;
 import com.example.app.service.TouristService;
 import com.example.app.service.VisitService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class VisitController {
 
-    @Autowired
-    private VisitService visitService;
+    private final VisitService visitService;
 
-    @Autowired
-    private CountryService countryService;
+    private final CountryService countryService;
 
-    @Autowired
-    private TouristService touristService;
+    private final TouristService touristService;
+
+    public VisitController(VisitService visitService, CountryService countryService, TouristService touristService) {
+        this.visitService = visitService;
+        this.countryService = countryService;
+        this.touristService = touristService;
+    }
 
     @GetMapping("/tourist-country")
-    public ResponseEntity<List<Visit>> getVisits() {
-        List<Visit> visits = visitService.getVisits();
+    public ResponseEntity<List<VisitDTO>> getVisits() {
+        List<VisitDTO> visits = visitService.getVisits().stream().map(
+                        e -> new VisitDTO(
+                                e.getId(),
+                                e.getTourist().getTouristId(),
+                                e.getCountry().getCountryId(),
+                                e.getMoneySpent(),
+                                e.getDaysSpent()))
+                .collect(Collectors.toList());
         if (visits.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(visits, HttpStatus.OK);
