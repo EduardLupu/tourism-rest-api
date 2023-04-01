@@ -14,7 +14,8 @@ public interface TouristRepository extends JpaRepository<Tourist, Long> {
 
     // Show all tourists in descending order based on the money spent in all of their visits.
 
-    @Query("SELECT NEW com.example.app.dto.TouristStatisticsDTO(t.touristId, t.touristName, t.touristDateOfBirth, t.touristGender, SUM(v.moneySpent)) " +
+    @Query("SELECT NEW com.example.app.dto.TouristStatisticsDTO(t.touristId, " +
+            "t.touristName, t.touristDateOfBirth, t.touristGender, SUM(v.moneySpent)) " +
             "FROM Tourist t " +
             "JOIN t.visits v " +
             "GROUP BY t.touristId " +

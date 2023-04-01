@@ -1,5 +1,7 @@
 package com.example.app;
 
+import com.example.app.dto.CountryStatisticsDTO;
+import com.example.app.dto.TouristStatisticsDTO;
 import com.example.app.model.*;
 import com.example.app.repository.CityRepository;
 import com.example.app.repository.CountryRepository;
@@ -9,17 +11,13 @@ import com.example.app.service.CountryService;
 import com.example.app.service.TouristService;
 import com.example.app.service.VisitService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

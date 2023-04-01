@@ -26,7 +26,7 @@ public class TouristService {
                         tourist.getTouristName(),
                         tourist.getTouristDateOfBirth(),
                         tourist.getTouristGender(),
-                        tourist.getAge()))
+                        tourist.getTouristAge()))
                 .collect(Collectors.toList());
     }
 

@@ -1,6 +1,6 @@
 package com.example.app.dto;
 
-public record VisitDTOwithDTOs(
+public record VisitDTOTouristDTOCountryDTO(
         Long id,
         TouristDTO tourist,
         CountryDTO country,

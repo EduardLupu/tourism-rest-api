@@ -9,7 +9,6 @@ import com.example.app.model.Country;
 import com.example.app.repository.CityRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

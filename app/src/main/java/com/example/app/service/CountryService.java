@@ -6,8 +6,6 @@ import com.example.app.exceptions.ResourceNotFoundException;
 import com.example.app.model.City;
 import com.example.app.model.Country;
 import com.example.app.repository.CountryRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -84,13 +82,6 @@ public class CountryService {
     public Country addCity(Long id, City city) {
         Country countryToBeUpdated = getCountryById(id);
         countryToBeUpdated.addCity(city);
-        return countryRepository.save(countryToBeUpdated);
-    }
-
-
-    public Country removeCity(Long id, City city) {
-        Country countryToBeUpdated = getCountryById(id);
-        countryToBeUpdated.removeCity(city);
         return countryRepository.save(countryToBeUpdated);
     }
 

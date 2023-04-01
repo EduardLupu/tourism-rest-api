@@ -79,6 +79,6 @@ public class CountryController {
     @DeleteMapping("/countries/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         countryService.deleteCountry(id);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

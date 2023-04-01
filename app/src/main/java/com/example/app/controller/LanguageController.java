@@ -45,6 +45,6 @@ public class LanguageController {
     @DeleteMapping("/languages/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         languageService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

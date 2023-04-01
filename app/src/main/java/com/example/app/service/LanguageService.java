@@ -40,7 +40,7 @@ public class LanguageService {
 
     public void deleteById(Long id) {
         Language language = getLanguageById(id);
-        languageRepository.deleteById(id);
+        languageRepository.delete(language);
     }
 
 }

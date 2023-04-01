@@ -1,7 +1,7 @@
 package com.example.app.controller;
 
 import com.example.app.dto.VisitDTO;
-import com.example.app.dto.VisitDTOwithDTOs;
+import com.example.app.dto.VisitDTOTouristDTOCountryDTO;
 import com.example.app.model.Visit;
 import com.example.app.service.VisitService;
 import jakarta.validation.Valid;
@@ -29,8 +29,8 @@ public class VisitController {
     }
 
     @GetMapping("/tourist-country/{id}")
-    public ResponseEntity<VisitDTOwithDTOs> getVisitById(@PathVariable Long id) {
-        VisitDTOwithDTOs visit = visitService.getVisitByIdWithDTOs(id);
+    public ResponseEntity<VisitDTOTouristDTOCountryDTO> getVisitById(@PathVariable Long id) {
+        VisitDTOTouristDTOCountryDTO visit = visitService.getVisitByIdWithDTOs(id);
         return new ResponseEntity<>(visit, HttpStatus.OK);
     }
 
@@ -50,6 +50,6 @@ public class VisitController {
     @DeleteMapping("/tourist-country/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         visitService.deleteVisit(id);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

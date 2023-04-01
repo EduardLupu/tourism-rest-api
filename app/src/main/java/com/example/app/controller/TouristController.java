@@ -54,6 +54,6 @@ public class TouristController {
     @DeleteMapping("/tourists/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
         touristService.deleteTourist(id);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

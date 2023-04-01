@@ -3,7 +3,7 @@ package com.example.app.service;
 import com.example.app.dto.CountryDTO;
 import com.example.app.dto.TouristDTO;
 import com.example.app.dto.VisitDTO;
-import com.example.app.dto.VisitDTOwithDTOs;
+import com.example.app.dto.VisitDTOTouristDTOCountryDTO;
 import com.example.app.exceptions.ResourceNotFoundException;
 import com.example.app.model.Country;
 import com.example.app.model.Tourist;
@@ -46,17 +46,17 @@ public class VisitService {
                 () -> new ResourceNotFoundException("Visit with id " + id + " not found!"));
     }
 
-    public VisitDTOwithDTOs getVisitByIdWithDTOs(Long id) {
+    public VisitDTOTouristDTOCountryDTO getVisitByIdWithDTOs(Long id) {
         Visit visit = getVisitById(id);
         Tourist t = visit.getTourist();
         Country c = visit.getCountry();
-        return new VisitDTOwithDTOs(
+        return new VisitDTOTouristDTOCountryDTO(
                 visit.getId(),
                 new TouristDTO(t.getTouristId(),
                         t.getTouristName(),
                         t.getTouristDateOfBirth(),
                         t.getTouristGender(),
-                        t.getAge()),
+                        t.getTouristAge()),
                 new CountryDTO(c.getCountryId(),
                         c.getCountryName(),
                         c.getCountryPopulation(),
