@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Service
 public class CityService {
 
-
     private final CityRepository cityRepository;
 
     public CityService(CityRepository cityRepository) {
@@ -70,12 +69,12 @@ public class CityService {
         return cityRepository.findAll()
                 .stream()
                 .map(c -> new CityDTOCountryId(
-                            c.getCityId(),
-                            c.getCityName(),
-                            c.getCitySurface(),
-                            c.getCityPopulation(),
-                            c.getCityPopulation(),
-                            (c.getCountry() == null) ? null : c.getCountry().getCountryId()))
+                        c.getCityId(),
+                        c.getCityName(),
+                        c.getCitySurface(),
+                        c.getCityPopulation(),
+                        c.getCityPopulation(),
+                        (c.getCountry() == null) ? null : c.getCountry().getCountryId()))
                 .collect(Collectors.toList());
     }
 }

@@ -21,12 +21,6 @@ public class Tourist {
     private LocalDate touristDateOfBirth; // YYYY-MM-DD
     @NotBlank(message = "Error: touristGender shouldn't be blank!")
     private String touristGender;
-
-    public int getTouristAge() {
-        LocalDate now = LocalDate.now();
-        return Period.between(touristDateOfBirth, now).getYears();
-    }
-
     @OneToMany(mappedBy = "tourist")
     private List<Visit> visits = new ArrayList<>();
 
@@ -39,6 +33,11 @@ public class Tourist {
 
     public Tourist() {
 
+    }
+
+    public int getTouristAge() {
+        LocalDate now = LocalDate.now();
+        return Period.between(touristDateOfBirth, now).getYears();
     }
 
     public Long getTouristId() {

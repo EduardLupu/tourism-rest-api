@@ -10,14 +10,12 @@ import java.util.List;
 
 @Repository
 public interface CountryRepository extends JpaRepository<Country, Long> {
-
-  @Query(
-          "SELECT NEW com.example.app.dto.CountryStatisticsDTO(c.countryId, c.countryName, AVG(v.daysSpent)) " +
-                  "FROM Country c " +
-                  "JOIN c.visits v " +
-                  "GROUP BY c.countryId " +
-                  "ORDER BY AVG(v.daysSpent) DESC "
-  )
-  List<CountryStatisticsDTO> orderCountriesByAverageDaysSpent();
-  // Show all countries order desc by the average days spent in visits
+    @Query("SELECT NEW com.example.app.dto.CountryStatisticsDTO(c.countryId, c.countryName, AVG(v.daysSpent)) " +
+            "FROM Country c " +
+            "JOIN c.visits v " +
+            "GROUP BY c.countryId " +
+            "ORDER BY AVG(v.daysSpent) DESC"
+    )
+    List<CountryStatisticsDTO> orderCountriesByAverageDaysSpent();
+    // Show all countries order desc by the average days spent in visits
 }

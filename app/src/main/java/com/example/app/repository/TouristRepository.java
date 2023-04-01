@@ -10,10 +10,6 @@ import java.util.List;
 
 @Repository
 public interface TouristRepository extends JpaRepository<Tourist, Long> {
-
-
-    // Show all tourists in descending order based on the money spent in all of their visits.
-
     @Query("SELECT NEW com.example.app.dto.TouristStatisticsDTO(t.touristId, " +
             "t.touristName, t.touristDateOfBirth, t.touristGender, SUM(v.moneySpent)) " +
             "FROM Tourist t " +
@@ -22,4 +18,5 @@ public interface TouristRepository extends JpaRepository<Tourist, Long> {
             "ORDER BY SUM(v.moneySpent) DESC"
     )
     List<TouristStatisticsDTO> orderTouristsByTheTotalMoneySpentInVisits();
+    // Show all tourists in descending order based on the money spent in all of their visits.
 }
