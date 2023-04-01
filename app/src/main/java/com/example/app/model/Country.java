@@ -20,6 +20,7 @@ public class Country {
     private int countrySurface;
     @Min(value = 0, message = "Error: countryPopulation shouldn't be negative!")
     private int countryPopulation;
+    @NotBlank(message = "Error: countryAbbreviation shouldn't be blank!")
     private String countryAbbreviation;
 
     @OneToMany(
@@ -31,10 +32,6 @@ public class Country {
 
     @OneToMany(mappedBy = "country")
     private List<Visit> visits = new ArrayList<>();
-
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
-    }
 
     public List<Visit> getVisits() {
         return visits;
@@ -99,13 +96,6 @@ public class Country {
 
     public List<City> getCities() {
         return cities;
-    }
-
-    public void setCities(List<City> cities) {
-        this.cities.clear();
-        for (City city : cities) {
-            addCity(city);
-        }
     }
 
     public void setVisits(List<Visit> visits) {

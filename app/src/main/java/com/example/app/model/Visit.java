@@ -2,6 +2,9 @@ package com.example.app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -24,15 +27,12 @@ public class Visit {
     @JsonIgnore
     private Country country;
 
+    @Min(value = 0, message = "Error: moneySpent shouldn't be negative!")
     private int moneySpent;
+    @Min(value = 0, message = "Error: daysSpent shouldn't be negative!")
     private int daysSpent;
 
-    public Visit(
-            Tourist tourist,
-            Country country,
-            int moneySpent,
-            int daysSpent
-    ) {
+    public Visit(Tourist tourist, Country country, int moneySpent, int daysSpent) {
         this.tourist = tourist;
         this.country = country;
         this.moneySpent = moneySpent;
@@ -42,24 +42,20 @@ public class Visit {
     public Visit() {
     }
 
-    @Transient
     public Long getTouristId() {
         return tourist.getTouristId();
     }
 
-    @Transient
     public String getTouristName() {
         return tourist.getTouristName();
     }
 
-    @Transient
     public String getCountryName() {
         return country.getCountryName();
     }
 
-    @Transient
     public Long getCountryId() {
-        return tourist.getTouristId();
+        return country.getCountryId();
     }
 
     public Long getId() {

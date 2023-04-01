@@ -1,6 +1,9 @@
 package com.example.app.service;
 
+import com.example.app.dto.CityDTOCountryDTO;
 import com.example.app.dto.CityDTOCountryId;
+import com.example.app.dto.CountryDTO;
+import com.example.app.exceptions.ResourceNotFoundException;
 import com.example.app.model.City;
 import com.example.app.model.Country;
 import com.example.app.repository.CityRepository;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CityService {
@@ -19,12 +23,10 @@ public class CityService {
         this.cityRepository = cityRepository;
     }
 
-    public List<City> getCities() {
-        return cityRepository.findAll();
-    }
-
     public City getCityById(Long id) {
-        return cityRepository.findById(id).orElse(null);
+        return cityRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("City with id " + id + " not found!")
+        );
     }
 
     public City createCity(City city) {
@@ -32,43 +34,49 @@ public class CityService {
     }
 
     public City updateCity(Long id, City city) {
-        if (cityRepository.existsById(id)) {
-            City cityToBeUpdated = getCityById(id);
-            Country countryToBeUpdated = cityToBeUpdated.getCountry();
-            countryToBeUpdated.removeCity(cityToBeUpdated);
-            cityToBeUpdated.setCityName(city.getCityName());
-            cityToBeUpdated.setCitySurface(city.getCitySurface());
-            cityToBeUpdated.setCityPopulation(city.getCityPopulation());
-            cityToBeUpdated.setCityPostalCode(city.getCityPostalCode());
-            countryToBeUpdated.addCity(cityToBeUpdated);
-            return cityRepository.save(cityToBeUpdated);
-        }
-        return null;
+        City cityToBeUpdated = getCityById(id);
+        Country countryToBeUpdated = cityToBeUpdated.getCountry();
+        countryToBeUpdated.removeCity(cityToBeUpdated);
+        cityToBeUpdated.setCityName(city.getCityName());
+        cityToBeUpdated.setCitySurface(city.getCitySurface());
+        cityToBeUpdated.setCityPopulation(city.getCityPopulation());
+        cityToBeUpdated.setCityPostalCode(city.getCityPostalCode());
+        countryToBeUpdated.addCity(cityToBeUpdated);
+        return cityRepository.save(cityToBeUpdated);
     }
 
-    public boolean deleteCity(Long id) {
-        if (cityRepository.existsById(id)) {
-            cityRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteCity(Long id) {
+        City city = getCityById(id);
+        cityRepository.delete(city);
     }
 
-    public List<CityDTOCountryId> getCitiesDTOCountryId() {
-        List<City> cities = cityRepository.findAll();
-        List<CityDTOCountryId> result = new ArrayList<>();
-        for (City c : cities) {
-            result.add(
-                    new CityDTOCountryId(
+    public CityDTOCountryDTO getCityDTOCountryDTO(Long id) {
+        City city = getCityById(id);
+        return new CityDTOCountryDTO(
+                city.getCityId(),
+                city.getCityName(),
+                city.getCitySurface(),
+                city.getCityPopulation(),
+                city.getCityPopulation(),
+                (city.getCountry() == null) ? null : new CountryDTO(
+                        city.getCountry().getCountryId(),
+                        city.getCountry().getCountryName(),
+                        city.getCountry().getCountryPopulation(),
+                        city.getCountry().getCountrySurface(),
+                        city.getCountry().getCountryAbbreviation())
+        );
+    }
+
+    public List<CityDTOCountryId> getCities() {
+        return cityRepository.findAll()
+                .stream()
+                .map(c -> new CityDTOCountryId(
                             c.getCityId(),
                             c.getCityName(),
                             c.getCitySurface(),
                             c.getCityPopulation(),
                             c.getCityPopulation(),
-                            (c.getCountry() == null) ? null : c.getCountry().getCountryId()
-                    )
-            );
-        }
-        return result;
+                            (c.getCountry() == null) ? null : c.getCountry().getCountryId()))
+                .collect(Collectors.toList());
     }
 }

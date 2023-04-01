@@ -1,5 +1,6 @@
 package com.example.app.service;
 
+import com.example.app.exceptions.ResourceNotFoundException;
 import com.example.app.model.Language;
 import com.example.app.repository.LanguageRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,8 @@ public class LanguageService {
     }
 
     public Language getLanguageById(Long id) {
-        return languageRepository.findById(id).orElse(null);
+        return languageRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Language with id " + id + " not found!"));
     }
 
     public Language createLanguage(Language language) {
@@ -29,22 +31,16 @@ public class LanguageService {
     }
 
     public Language updateLanguage(Long id, Language language) {
-        if (languageRepository.existsById(id)) {
-            Language language1 = getLanguageById(id);
-            language1.setLanguageName(language.getLanguageName());
-            language1.setLanguageAbbreviation(language.getLanguageAbbreviation());
-            language1.setNativeSpeakers(language.getNativeSpeakers());
-            return languageRepository.save(language1);
-        }
-        return null;
+        Language language1 = getLanguageById(id);
+        language1.setLanguageName(language.getLanguageName());
+        language1.setLanguageAbbreviation(language.getLanguageAbbreviation());
+        language1.setNativeSpeakers(language.getNativeSpeakers());
+        return languageRepository.save(language1);
     }
 
-    public boolean deleteById(Long id) {
-        if (languageRepository.existsById(id)) {
-            languageRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteById(Long id) {
+        Language language = getLanguageById(id);
+        languageRepository.deleteById(id);
     }
 
 }

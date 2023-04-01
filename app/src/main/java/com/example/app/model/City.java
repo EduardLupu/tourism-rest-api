@@ -2,6 +2,8 @@ package com.example.app.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class City {
@@ -9,9 +11,13 @@ public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cityId;
+    @NotBlank(message = "Error: cityName shouldn't be blank!")
     private String cityName;
+    @Min(value = 0, message = "Error: citySurface shouldn't be negative!")
     private int citySurface;
+    @Min(value = 0, message = "Error: cityPopulation shouldn't be negative!")
     private int cityPopulation;
+    @Min(value = 0, message = "Error: cityPostalCode shouldn't be negative!")
     private int cityPostalCode;
 
     @JsonBackReference
@@ -24,10 +30,6 @@ public class City {
 
     public Long getCityId() {
         return cityId;
-    }
-
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
     }
 
     public String getCityName() {

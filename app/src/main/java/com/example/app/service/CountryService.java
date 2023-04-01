@@ -2,10 +2,12 @@ package com.example.app.service;
 
 import com.example.app.dto.CountryDTO;
 import com.example.app.dto.CountryStatisticsDTO;
+import com.example.app.exceptions.ResourceNotFoundException;
 import com.example.app.model.City;
 import com.example.app.model.Country;
-import com.example.app.repository.CityRepository;
 import com.example.app.repository.CountryRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,23 +18,23 @@ public class CountryService {
 
     private final CountryRepository countryRepository;
 
-    private final CityRepository cityRepository;
+    private final CityService cityService;
 
-    public CountryService(CountryRepository countryRepository, CityRepository cityRepository) {
+    public CountryService(CountryRepository countryRepository, CityService cityService) {
         this.countryRepository = countryRepository;
-        this.cityRepository = cityRepository;
+        this.cityService = cityService;
     }
 
-    public void assignCitiesToCountry(Long id, List<Long> cities_id_list) {
+    public Country assignCitiesToCountry(Long id, List<Long> cities_id_list) {
         Country country = getCountryById(id);
         for (Long city_id : cities_id_list) {
-            if (cityRepository.existsById(city_id)) {
-                City city = cityRepository.getReferenceById(city_id);
+            City city = cityService.getCityById(city_id);
+            if (city != null) {
                 country.addCity(city);
-                cityRepository.save(city);
+                cityService.createCity(city);
             }
         }
-        countryRepository.save(country);
+        return countryRepository.save(country);
     }
 
     public List<CountryDTO> getCountriesWithPopulationHigherThan(int population) {
@@ -48,61 +50,61 @@ public class CountryService {
                 .collect(Collectors.toList());
     }
 
-    public List<Country> getCountries() {
-        return countryRepository.findAll();
+    public List<CountryDTO> getCountries() {
+        return countryRepository.findAll()
+                .stream()
+                .map(country -> new CountryDTO(
+                        country.getCountryId(),
+                        country.getCountryName(),
+                        country.getCountryPopulation(),
+                        country.getCountrySurface(),
+                        country.getCountryAbbreviation()))
+                .collect(Collectors.toList());
     }
 
     public Country getCountryById(Long id) {
-        return countryRepository.findById(id).orElse(null);
+        return countryRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Country with id " + id + " not found!")
+        );
     }
 
     public Country createCountry(Country country) {
-        Country countrySaved = countryRepository.save(country);
-        cityRepository.saveAll(countrySaved.getCities());
-        return countrySaved;
+        return countryRepository.save(country);
     }
 
     public Country updateCountry(Long id, Country country) {
-        if (countryRepository.existsById(id)) {
-            Country countryToBeUpdated = getCountryById(id);
-            countryToBeUpdated.setCountryName(country.getCountryName());
-            countryToBeUpdated.setCountrySurface(country.getCountrySurface());
-            countryToBeUpdated.setCountryPopulation(country.getCountryPopulation());
-            countryToBeUpdated.setCountryAbbreviation(country.getCountryAbbreviation());
-            countryToBeUpdated.setCities(country.getCities());
-            return countryRepository.save(countryToBeUpdated);
-        }
-        return null;
+        Country countryToBeUpdated = getCountryById(id);
+        countryToBeUpdated.setCountryName(country.getCountryName());
+        countryToBeUpdated.setCountrySurface(country.getCountrySurface());
+        countryToBeUpdated.setCountryPopulation(country.getCountryPopulation());
+        countryToBeUpdated.setCountryAbbreviation(country.getCountryAbbreviation());
+        return countryRepository.save(countryToBeUpdated);
     }
 
     public Country addCity(Long id, City city) {
-        if (countryRepository.existsById(id)) {
-            Country countryToBeUpdated = getCountryById(id);
-            countryToBeUpdated.addCity(city);
-            return countryRepository.save(countryToBeUpdated);
-        }
-        return null;
+        Country countryToBeUpdated = getCountryById(id);
+        countryToBeUpdated.addCity(city);
+        return countryRepository.save(countryToBeUpdated);
     }
+
 
     public Country removeCity(Long id, City city) {
-        if (countryRepository.existsById(id)) {
-            Country countryToBeUpdated = getCountryById(id);
-            countryToBeUpdated.removeCity(city);
-            return countryRepository.save(countryToBeUpdated);
-        }
-        return null;
+        Country countryToBeUpdated = getCountryById(id);
+        countryToBeUpdated.removeCity(city);
+        return countryRepository.save(countryToBeUpdated);
     }
 
-
-    public boolean deleteCountry(Long id) {
-        if (countryRepository.existsById(id)) {
-            countryRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteCountry(Long id) {
+        Country country = getCountryById(id);
+        countryRepository.delete(country);
     }
 
     public List<CountryStatisticsDTO> getCountriesAverageDaysSpent() {
         return countryRepository.orderCountriesByAverageDaysSpent();
+    }
+
+    public Country assignCityToId(Long id, Long cityId) {
+        City city = cityService.getCityById(cityId);
+        return addCity(id, city);
     }
 }
