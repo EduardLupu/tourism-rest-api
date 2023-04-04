@@ -5,6 +5,8 @@ import { AppHome } from "./components/AppHome";
 import AppNav from "./components/AppNav";
 import Countries from "./components/Countries";
 import CountryDetails from "./components/CountryDetails";
+import { Tourists } from "./components/Tourists";
+import { Visits } from "./components/Visits";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           <Route path="/" element={<AppHome />} />
           <Route path="/countries" element={<Countries />} />
           <Route path="/countries/:countryId" element={<CountryDetails />} />
+          <Route path="/tourists" element={<Tourists />} />
+          <Route path="/visits" element={<Visits />} />
         </Routes>
       </Router>
     </React.Fragment>

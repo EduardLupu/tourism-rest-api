@@ -18,6 +18,9 @@ function AppNav() {
       <Link to="/tourists">
         <Button>Tourists</Button>
       </Link>
+      <Link to="/visits">
+        <Button>Visits</Button>
+      </Link>
     </header>
   );
 }
