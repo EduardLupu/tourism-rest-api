@@ -9,6 +9,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
 } from "@mui/material";
 import { Component, useEffect, useState } from "react";
@@ -16,11 +17,38 @@ import { Link, useParams } from "react-router-dom";
 import BACKEND_API_URL from "../constants";
 import { Country } from "../models/Country";
 import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTone";
+import React from "react";
 
 function CountryDetails() {
   const { countryId } = useParams();
   const [loading, setLoading] = useState(false);
   const [country, setCountry] = useState<Country>();
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage2, setRowsPerPage2] = React.useState(5);
+  const [page2, setPage2] = React.useState(0);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const handleChangePage2 = (event: unknown, newPage: number) => {
+    setPage2(newPage);
+  };
+
+  const handleChangeRowsPerPage2 = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage2(+event.target.value);
+    setPage2(0);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -85,6 +113,15 @@ function CountryDetails() {
                 ))}
               </TableBody>
             </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={country?.cities?.length || 0}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </TableContainer>
           <h4> Visits:</h4>
           <TableContainer
@@ -114,6 +151,15 @@ function CountryDetails() {
                 ))}
               </TableBody>
             </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={country?.visits?.length || 0}
+              rowsPerPage={rowsPerPage2}
+              page={page2}
+              onPageChange={handleChangePage2}
+              onRowsPerPageChange={handleChangeRowsPerPage2}
+            />
           </TableContainer>
         </CardContent>
       </Card>
